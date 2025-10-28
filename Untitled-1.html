@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NTG_Discos - Catálogo Completo</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Variáveis e Estilos Globais */
+        :root {
+            --cor-primaria: #ff5722; /* Destaque - Laranja/Vermelho */
+            --cor-fundo-escuro: #121212; /* Fundo Principal */
+            --cor-texto-claro: #f0f0f0;
+            --cor-card: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--cor-fundo-escuro);
+            color: var(--cor-texto-claro);
+            margin: 0;
+            padding-top: 80px;
+        }
+
+        a {
+            color: var(--cor-primaria);
+            text-decoration: none;
+        }
+
+        /* --- HEADER --- */
+        .header-ntg {
+            background-color: #000;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--cor-primaria);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-logo {
+            font-size: 2em;
+            font-weight: 900;
+        }
+
+        /* Efeito de Digitação */
+        #titulo-dinamico {
+            color: var(--cor-primaria);
+            overflow: hidden;
+            border-right: .15em solid var(--cor-primaria);
+            white-space: nowrap;
+            letter-spacing: .05em;
+            display: inline-block;
+        }
+
+        /* Botão do Carrinho no Header */
+        .cart-button {
+            background-color: var(--cor-primaria);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+            font-size: 1.1em;
+            transition: background-color 0.2s;
+        }
+
+        .cart-button:hover {
+            background-color: #cc451c;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #fff;
+            color: #000;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+        
+        /* --- CONTEÚDO PRINCIPAL E CATÁLOGO --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            color: var(--cor-primaria);
+        }
+
+        .catalogo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* Estilo do Card do Vinil */
+        .card-vinil {
+            background-color: var(--cor-card);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card-vinil:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(255, 87, 34, 0.2);
+        }
+
+        .card-imagem img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-conteudo {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .card-artista {
+            font-size: 1em;
+            color: #ccc;
+            margin-top: 5px;
+        }
+        
+        .card-titulo {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--cor-texto-claro);
+        }
+
+        .card-preco {
+            font-size: 1.8em;
+            font-weight: 900;
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+
+        .btn-comprar {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: var(--cor-primaria);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-comprar:hover {
+            background-color: #cc451c;
+        }
+        
+        /* --- RODAPÉ --- */
+        .footer-ntg {
+            background-color: #000;
+            color: #777;
+            padding: 40px 60px 20px 60px;
+            margin-top: 50px;
+            border-top: 3px solid var(--cor-primaria);
+        }
+
+        .footer-direitos {
+            text-align: center;
+            font-size: 0.8em;
+            padding-top: 20px;
+        }
+
+        /* --- SIDEBAR DO CARRINHO --- */
+        .sidebar-carrinho {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 350px;
+            height: 100%;
+            background-color: #fff;
+            color: #000;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(100%);
+            transition: transform 0.4s ease-in-out;
+            z-index: 150;
+            display: flex;
+            flex-direction: column; /* CORREÇÃO AQUI: Garante o layout vertical */
+            padding: 20px;
+            overflow-y: hidden; /* CORREÇÃO AQUI: Apenas a lista de itens vai rolar */
+        }
+
+        .sidebar-carrinho.aberto {
+            transform: translateX(0);
+        }
+
+        .carrinho-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .carrinho-header h2 {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .btn-fechar {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .carrinho-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 10px;
+        }
+
+        .carrinho-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            margin-right: 15px;
+            border-radius: 4px;
+        }
+
+        .carrinho-detalhes {
+            flex-grow: 1;
+        }
+
+        .carrinho-detalhes h4 {
+            font-size: 1em;
+            margin: 0;
+        }
+
+        .carrinho-detalhes p {
+            font-size: 0.9em;
+            color: #666;
+            margin: 2px 0;
+        }
+
+        .carrinho-total {
+            border-top: 2px solid #ddd;
+            padding-top: 15px;
+            /* REMOVIDO: margin-top: auto; */
+            font-size: 1.2em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-finalizar {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-finalizar:hover {
+            background-color: #45a049;
+        }
+        
+        .carrinho-vazio {
+            text-align: center;
+            padding: 50px 0;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-ntg">
+        <div class="header-logo">
+            <span id="titulo-dinamico"></span>
+        </div>
+        
+        <button class="cart-button" onclick="toggleCart()">
+            <i class="fas fa-shopping-cart"></i> Carrinho
+            <span class="cart-count" id="cart-count">0</span>
+        </button>
+    </header>
+
+    <main class="container">
+        <h1>Catálogo de Vinis NTG_Discos</h1>
+        
+        <div class="catalogo-grid" id="catalogo">
+            </div>
+    </main>
+
+    <footer class="footer-ntg">
+        <div class="footer-direitos">
+            &copy; 2025 NTG_Discos. Feito com paixão pelo som analógico.
+        </div>
+    </footer>
+
+    <div class="sidebar-carrinho" id="sidebar-carrinho">
+        <div class="carrinho-header">
+            <h2>Seu Carrinho</h2>
+            <button class="btn-fechar" onclick="toggleCart()"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div id="carrinho-lista" style="flex-grow: 1; overflow-y: auto; padding-right: 5px;">
+            </div>
+        
+        <div class="carrinho-total">
+            <span>Total:</span>
+            <span id="carrinho-total">R$ 0,00</span>
+        </div>
+        <button class="btn-finalizar" onclick="alert('Funcionalidade de Checkout em desenvolvimento! Total: ' + document.getElementById('carrinho-total').innerText)">
+            Finalizar Compra
+        </button>
+    </div>
+
+    <script>
+        // --- Dados do Catálogo com SUAS IMAGENS e Preços ---
+        const vinylRecordsData = [
+            // Black Sabbath (Com base nas suas imagens)
+            { id: 1, name: 'Sabbath Bloody Sabbath', artist: 'Black Sabbath', price: 270.00, imageUrl: './imagens/image_89f90a.jpg' },
+            { id: 2, name: 'Sabotage', artist: 'Black Sabbath', price: 210.00, imageUrl: './imagens/image_89f923.jpg' },
+            { id: 3, name: 'Never Say Die!', artist: 'Black Sabbath', price: 250.00, imageUrl: './imagens/image_89f948.jpg' },
+            { id: 4, name: 'The Eternal Idol', artist: 'Black Sabbath', price: 280.00, imageUrl: './imagens/image_89f962.jpg' },
+            
+            // The Beatles
+            { id: 5, name: 'With the Beatles', artist: 'The Beatles', price: 200.00, imageUrl: './imagens/image_89f927.jpg' },
+            
+            // Outros Clássicos (Usando Placeholders Temporários, mas você pode substituí-los!)
+            { id: 6, name: 'Back in Black', artist: 'AC/DC', price: 320.00, imageUrl: 'https://via.placeholder.com/280/000000/fff?text=ACDC' },
+            { id: 7, name: 'The Dark Side of the Moon', artist: 'Pink Floyd', price: 480.00, imageUrl: 'https://via.placeholder.com/280/4f46e5/fff?text=PINK+FLOYD' },
+            { id: 8, name: 'Led Zeppelin IV', artist: 'Led Zeppelin', price: 310.00, imageUrl: 'https://via.placeholder.com/280/292524/fff?text=LED+ZEPPELIN+IV' },
+            { id: 9, name: 'Appetite for Destruction', artist: 'Guns N\' Roses', price: 280.00, imageUrl: 'https://via.placeholder.com/280/facc15/000000?text=GUNS+N+ROSES' },
+            { id: 10, name: 'Kind of Blue', artist: 'Miles Davis', price: 450.00, imageUrl: 'https://via.placeholder.com/280/00bcd4/000000?text=JAZZ' }, 
+            { id: 11, name: 'Clube da Esquina', artist: 'Milton Nascimento', price: 390.00, imageUrl: 'https://via.placeholder.com/280/8bc34a/000000?text=MPB' },
+            { id: 12, name: 'Thriller', artist: 'Michael Jackson', price: 180.00, imageUrl: 'https://via.placeholder.com/280/ffeb3b/000000?text=POP' },
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('ntg_discos_cart')) || [];
+
+        function initTypingEffect() {
+            const elemento = document.getElementById('titulo-dinamico');
+            const textoCompleto = "NTG_Discos";
+            let i = 0;
+            const velocidade = 100;
+
+            function escreverTexto() {
+                if (i < textoCompleto.length) {
+                    elemento.innerHTML += textoCompleto.charAt(i);
+                    i++;
+                    setTimeout(escreverTexto, velocidade);
+                } else {
+                    elemento.style.borderRight = 'none';
+                }
+            }
+            escreverTexto();
+        }
+
+        function renderCatalog() {
+            const catalogoEl = document.getElementById('catalogo');
+            catalogoEl.innerHTML = '';
+            
+            vinylRecordsData.forEach(record => {
+                const card = document.createElement('div');
+                card.className = 'card-vinil';
+                card.innerHTML = `
+                    <div class="card-imagem">
+                        <img src="${record.imageUrl}" alt="Capa ${record.name}" onerror="this.onerror=null;this.src='https://via.placeholder.com/280/1a1a1a/fff?text=FOTO+NAO+ENCONTRADA';">
+                    </div>
+                    <div class="card-conteudo">
+                        <div class="card-artista">${record.artist}</div>
+                        <div class="card-titulo">${record.name}</div>
+                        <div class="card-preco">R$ ${record.price.toFixed(2).replace('.', ',')}</div>
+                        <button class="btn-comprar" onclick="addToCart(${record.id})">
+                            <i class="fas fa-cart-plus"></i> ADICIONAR
+                        </button>
+                    </div>
+                `;
+                catalogoEl.appendChild(card);
+            });
+        }
+
+        function addToCart(recordId) {
+            const record = vinylRecordsData.find(r => r.id === recordId);
+            const existingItem = cart.find(item => item.id === recordId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...record, quantity: 1 });
+            }
+
+            updateCartUI();
+            toggleCart(true);
+        }
+
+        function removeFromCart(recordId) {
+            const itemIndex = cart.findIndex(item => item.id === recordId);
+
+            if (itemIndex > -1) {
+                if (cart[itemIndex].quantity > 1) {
+                    cart[itemIndex].quantity -= 1;
+                } else {
+                    cart.splice(itemIndex, 1);
+                }
+            }
+
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const listaEl = document.getElementById('carrinho-lista');
+            const countEl = document.getElementById('cart-count');
+            let total = 0;
+
+            listaEl.innerHTML = '';
+
+            if (cart.length === 0) {
+                listaEl.innerHTML = '<p class="carrinho-vazio">Seu carrinho está fazendo um solo de silêncio.</p>';
+            } else {
+                cart.forEach(item => {
+                    total += item.price * item.quantity;
+
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'carrinho-item';
+                    itemEl.innerHTML = `
+                        <img src="${item.imageUrl}" alt="Capa ${item.name}" onerror="this.onerror=null;this.src='https://via.placeholder.com/60/1a1a1a/fff?text=CAPA';">
+                        <div class="carrinho-detalhes">
+                            <h4>${item.name}</h4>
+                            <p>${item.artist}</p>
+                            <p>R$ ${item.price.toFixed(2).replace('.', ',')} x ${item.quantity}</p>
+                        </div>
+                        <div>
+                            <button onclick="removeFromCart(${item.id})" style="background:none; border:none; color: #ff5722; cursor:pointer;">
+                                <i class="fas fa-minus-circle"></i>
+                            </button>
+                            <button onclick="addToCart(${item.id})" style="background:none; border:none; color: #4CAF50; cursor:pointer;">
+                                <i class="fas fa-plus-circle"></i>
+                            </button>
+                        </div>
+                    `;
+                    listaEl.appendChild(itemEl);
+                });
+            }
+
+            const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('carrinho-total').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            countEl.innerText = totalQuantity;
+
+            localStorage.setItem('ntg_discos_cart', JSON.stringify(cart));
+        }
+
+        function toggleCart(open = null) {
+            const sidebar = document.getElementById('sidebar-carrinho');
+            if (open === true) {
+                sidebar.classList.add('aberto');
+            } else if (open === false) {
+                sidebar.classList.remove('aberto');
+            } else {
+                sidebar.classList.toggle('aberto');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initTypingEffect();
+            renderCatalog();
+            updateCartUI();
+        });
+    </script>
+</body>
+</html>
