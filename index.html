@@ -201,9 +201,9 @@
             transition: transform 0.4s ease-in-out;
             z-index: 150;
             display: flex;
-            flex-direction: column; /* CORREÇÃO AQUI: Garante o layout vertical */
+            flex-direction: column;
             padding: 20px;
-            overflow-y: hidden; /* CORREÇÃO AQUI: Apenas a lista de itens vai rolar */
+            overflow-y: hidden;
         }
 
         .sidebar-carrinho.aberto {
@@ -267,7 +267,6 @@
         .carrinho-total {
             border-top: 2px solid #ddd;
             padding-top: 15px;
-            /* REMOVIDO: margin-top: auto; */
             font-size: 1.2em;
             font-weight: bold;
             display: flex;
@@ -345,16 +344,19 @@
     <script>
         // --- Dados do Catálogo com SUAS IMAGENS e Preços ---
         const vinylRecordsData = [
-            // Black Sabbath (Com base nas suas imagens)
+            // Black Sabbath e Beatles (Com base nas suas imagens anteriores)
             { id: 1, name: 'Sabbath Bloody Sabbath', artist: 'Black Sabbath', price: 270.00, imageUrl: './imagens/image_89f90a.jpg' },
             { id: 2, name: 'Sabotage', artist: 'Black Sabbath', price: 210.00, imageUrl: './imagens/image_89f923.jpg' },
             { id: 3, name: 'Never Say Die!', artist: 'Black Sabbath', price: 250.00, imageUrl: './imagens/image_89f948.jpg' },
             { id: 4, name: 'The Eternal Idol', artist: 'Black Sabbath', price: 280.00, imageUrl: './imagens/image_89f962.jpg' },
-            
-            // The Beatles
             { id: 5, name: 'With the Beatles', artist: 'The Beatles', price: 200.00, imageUrl: './imagens/image_89f927.jpg' },
             
-            // Outros Clássicos (Usando Placeholders Temporários, mas você pode substituí-los!)
+            // NOVOS DISCOS (Moraes Moreira, Djavan, Cazuza)
+            { id: 13, name: 'Moraes Moreira', artist: 'Moraes Moreira', price: 90.00, imageUrl: './imagens/image_8ad683.jpg' },
+            { id: 14, name: 'Meu Lado (1986)', artist: 'Djavan', price: 150.00, imageUrl: './imagens/image_8ad69e.jpg' },
+            { id: 15, name: 'Ideologia (1988)', artist: 'Cazuza', price: 130.00, imageUrl: './imagens/image_8ad6a1.jpg' },
+
+            // Outros Clássicos (Usando Placeholders Temporários)
             { id: 6, name: 'Back in Black', artist: 'AC/DC', price: 320.00, imageUrl: 'https://via.placeholder.com/280/000000/fff?text=ACDC' },
             { id: 7, name: 'The Dark Side of the Moon', artist: 'Pink Floyd', price: 480.00, imageUrl: 'https://via.placeholder.com/280/4f46e5/fff?text=PINK+FLOYD' },
             { id: 8, name: 'Led Zeppelin IV', artist: 'Led Zeppelin', price: 310.00, imageUrl: 'https://via.placeholder.com/280/292524/fff?text=LED+ZEPPELIN+IV' },
